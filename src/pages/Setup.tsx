@@ -27,7 +27,6 @@ export default function Setup({ }: Props) {
                         <MenuButton label={'+Add Hero'}/>
                     </div>
                 </div>
-
                 <div>
                     <h4>Enemies</h4>
                     <div className="h-[400px] w-[400px] border-2 p-2">
