@@ -1,0 +1,3 @@
+[submodule "game-state-model"]
+	path = game-state-model
+	url = https://github.com/OKilberg/game-state-model.git
