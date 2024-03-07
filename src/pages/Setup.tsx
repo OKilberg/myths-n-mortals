@@ -1,6 +1,8 @@
 import { useAtom } from "jotai"
-import { enemiesAtom, heroesAtom, mapAtom, modeAtom } from "../atoms"
+import { enemiesAtom, heroesAtom, mapAtom, modeAtom, viewAtom } from "../atoms"
 import { EnemyActor, NewEnemyActor, NewPlayerActor, PlayerActor } from "../../game-state-model/actors/actors"
+import { IoPlay } from "react-icons/io5";
+import { ReactNode } from "react";
 
 type Props = {}
 
@@ -9,6 +11,7 @@ export default function Setup({ }: Props) {
     const [mode, setMode] = useAtom(modeAtom)
     const [heroes, setHeroes] = useAtom(heroesAtom)
     const [enemies, setEnemies] = useAtom(enemiesAtom)
+    const [view, setView] = useAtom(viewAtom)
 
     function addHero() {
         const newHero = NewPlayerActor('Myrmidon', 'Player' + (heroes.length + 1))
@@ -16,7 +19,7 @@ export default function Setup({ }: Props) {
     }
 
     function addEnemy() {
-        const newEnemy = NewEnemyActor('Enemy' + (enemies.length + 1))
+        const newEnemy = NewEnemyActor('Enemy')
         setEnemies([...enemies, newEnemy])
     }
 
@@ -51,19 +54,22 @@ export default function Setup({ }: Props) {
                 <div>
                     <h4>Heroes</h4>
                     <div className="h-[400px] w-[400px] flex flex-col border-2 p-2 gap-2">
-                        {heroes.map(hero => <MenuItem label={hero.name} onClick={() => removeHeroById(hero.id)} className="border-green-600" />)}
+                        {heroes.map((hero, index) => <MenuItem label={`${hero.hero} (Player ${index+1})`} onClick={() => removeHeroById(hero.id)} className="border-green-600" />)}
                         <MenuButton label={'+Add Hero'} onClick={addHero} />
                     </div>
                 </div>
                 <div>
                     <h4>Enemies</h4>
                     <div className="h-[400px] w-[400px] flex flex-col border-2 p-2 gap-2">
-                        {enemies.map(enemy => <MenuItem label={enemy.name} onClick={() => removeEnemyById(enemy.id)} className="border-red-600" />)}
+                        {enemies.map((enemy, index) => <MenuItem label={`${enemy.name} (Enemy ${index+1})`} onClick={() => removeEnemyById(enemy.id)} className="border-red-600" />)}
                         <MenuButton label={'+Add Enemy'} onClick={addEnemy} />
 
                     </div>
                 </div>
             </section>
+            <MenuButton label="Play" onClick={()=>setView('play')} className="w-1/4 flex justify-center items-center gap-1 text-lg">
+                <IoPlay size={20}/>
+            </MenuButton>
         </main>
     )
 }
@@ -80,11 +86,11 @@ function RadioButton({ onChange, value, state }: RadioButton) {
         </label>)
 }
 
-const itemBaseStyle = "min-h-[28px] p-2 w-full border-2 hover:bg-zinc-900"
+const itemBaseStyle = "min-h-[28px] p-2 border-2 hover:bg-zinc-900"
 
-function MenuButton({ label, onClick, className }: { label: string, onClick?: any, className?: string }) {
+function MenuButton({ label, onClick, className, children }: { label: string, onClick?: any, className?: string, children?: ReactNode }) {
     const style = [itemBaseStyle, className].join(' ')
-    return <button onClick={() => onClick()} className={style}>{label}</button>
+    return <button onClick={() => onClick()} className={style}>{children}{label}</button>
 }
 
 function MenuItem({ label, onClick, className }: { label: string, onClick?: any, className?: string }) {
