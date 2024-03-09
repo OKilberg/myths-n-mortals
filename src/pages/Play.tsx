@@ -1,25 +1,28 @@
 import HexTile, { HexRow } from "../hex/HexTile"
 import { useAtom } from "jotai"
-import { gameStateAtom, viewAtom } from "../atoms"
+import { gameStateAtom, selectedActorAtom, viewAtom } from "../atoms"
 import { IoMdExit } from "react-icons/io";
 import { Actor, Hero } from "../../game-state-model/models/Actor";
+import { useState } from "react";
 
 type Props = {}
 
 export default function Play({ }: Props) {
     const [view, setView] = useAtom(viewAtom)
     const [gameState] = useAtom(gameStateAtom)
+    const [selectedActor, selectActor] = useAtom(selectedActorAtom)
 
     function renderHexTiles(){
         if(!gameState) return;
-        const tiles = gameState.hexGrid.toArray();
+        const tiles = gameState.gameStateData.hexGrid.toArray();
         const width = 8
         const height = 8
         const rows = []
         for (let i = 0; i < height; i++){
             const row = []
             while (row.length < width && tiles.length > 0){
-                row.push(<HexTile tile={tiles.shift()}/>)
+                const tile = tiles.shift()
+                if(tile) row.push(<HexTile tile={tile}/>)
             }
             rows.push(<HexRow offset={i % 2 ? true : false}>{row}</HexRow>)
         }
@@ -57,10 +60,14 @@ export default function Play({ }: Props) {
 }
 
 function UnitContainer({actor}: {actor: Actor}){
-    const {name, health, maxHealth, moves, maxMoves} = actor
+    const {id, name, health, maxHealth, moves, maxMoves} = actor
     const {hero} = actor as Hero
+    const [selectedActor, selectActor] = useAtom(selectedActorAtom)
+
+    const selectedStyle = "bg-blue-500"
+    const defaultStyle = `outline outline-grey-300 w-full min-h-[125px] ${selectedActor?.id === id && selectedStyle}`
     return (
-        <div className="outline outline-grey-300 w-full min-h-[125px]">
+        <div onClick={()=>selectActor(actor)} className={defaultStyle}>
             {
                 hero ? <p>{hero} ({name})</p> : <p>{name}</p>
             }
