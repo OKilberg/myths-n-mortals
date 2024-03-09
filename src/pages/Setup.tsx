@@ -1,29 +1,32 @@
 import { useAtom } from "jotai"
 import { enemiesAtom, heroesAtom, mapAtom, modeAtom, viewAtom } from "../atoms"
-import { EnemyActor, NewEnemyActor, NewPlayerActor, PlayerActor } from "../../game-state-model/actors/actors"
+import { Actor, newEnemy, newHero } from "../../game-state-model/models/Actor"
 import { IoPlay } from "react-icons/io5";
 import { ReactNode } from "react";
+import { GameStateData, newGameStateData } from "../../game-state-model/models/GameState";
 
-type Props = {}
+type Props = {
+    configureGameState: (gameStateData: GameStateData)=>void;
+}
 
-export default function Setup({ }: Props) {
+export default function Setup({ configureGameState }: Props) {
     const [map, setMap] = useAtom(mapAtom)
     const [mode, setMode] = useAtom(modeAtom)
     const [heroes, setHeroes] = useAtom(heroesAtom)
     const [enemies, setEnemies] = useAtom(enemiesAtom)
-    const [view, setView] = useAtom(viewAtom)
+    //const [view, setView] = useAtom(viewAtom)
 
     function addHero() {
-        const newHero = NewPlayerActor('Myrmidon', 'Player' + (heroes.length + 1))
-        setHeroes([...heroes, newHero])
+        const hero = newHero('Myrmidon', null, 'Player' + (heroes.length + 1))
+        setHeroes([...heroes, hero])
     }
 
     function addEnemy() {
-        const newEnemy = NewEnemyActor('Enemy')
-        setEnemies([...enemies, newEnemy])
+        const enemy = newEnemy(null)
+        setEnemies([...enemies, enemy])
     }
 
-    function removeActorById(id: number, actorArray: PlayerActor[] | EnemyActor[], setActorArray: any) {
+    function removeActorById(id: number, actorArray: Actor[], setActorArray: any) {
         const updatedArray = actorArray.filter(actor => actor.id !== id);
         setActorArray(updatedArray);
     }
@@ -34,6 +37,12 @@ export default function Setup({ }: Props) {
 
     function removeEnemyById(id: number) {
         removeActorById(id, enemies, setEnemies);
+    }
+
+    function completeSetup(){
+        const actors = [...heroes, ...enemies]
+        const shape = map
+        configureGameState(newGameStateData(actors, shape))
     }
 
     return (
@@ -67,7 +76,7 @@ export default function Setup({ }: Props) {
                     </div>
                 </div>
             </section>
-            <MenuButton label="Play" onClick={()=>setView('play')} className="w-1/4 flex justify-center items-center gap-1 text-lg">
+            <MenuButton label="Play" onClick={()=>completeSetup()} className="w-1/4 flex justify-center items-center gap-1 text-lg">
                 <IoPlay size={20}/>
             </MenuButton>
         </main>

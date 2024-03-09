@@ -1,9 +1,14 @@
 import { atom } from "jotai";
-import { EnemyActor, PlayerActor } from "../game-state-model/actors/actors";
+import { Enemy, Hero } from "../game-state-model/models/Actor";
+import { GameState, newGameState } from "../game-state-model/models/GameState";
+import { HexGridShapes } from "../game-state-model/models/HexGrid";
 
-export const viewAtom = atom('setup')
+type View = 'setup' | 'play'
 
-export const mapAtom = atom('rectangle')
+export const viewAtom = atom<View>('setup')
+
+export const mapAtom = atom<HexGridShapes>('rectangle')
 export const modeAtom = atom('standard')
-export const heroesAtom = atom<PlayerActor[]>([])
-export const enemiesAtom = atom<EnemyActor[]>([])
+export const heroesAtom = atom<Hero[]>([])
+export const enemiesAtom = atom<Enemy[]>([])
+export const gameStateAtom = atom<GameState>(newGameState())

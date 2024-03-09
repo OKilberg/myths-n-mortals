@@ -1,16 +1,17 @@
 import HexTile, { HexRow } from "../hex/HexTile"
-import { defaultGameState } from "../../game-state-model/state/state"
 import { useAtom } from "jotai"
-import { viewAtom } from "../atoms"
+import { gameStateAtom, viewAtom } from "../atoms"
 import { IoMdExit } from "react-icons/io";
+import { Actor, Hero } from "../../game-state-model/models/Actor";
 
 type Props = {}
 
 export default function Play({ }: Props) {
     const [view, setView] = useAtom(viewAtom)
-    const gameState = defaultGameState
+    const [gameState] = useAtom(gameStateAtom)
 
     function renderHexTiles(){
+        if(!gameState) return;
         const tiles = gameState.hexGrid.toArray();
         const width = 8
         const height = 8
@@ -33,7 +34,7 @@ export default function Play({ }: Props) {
             <section className="grid grid-cols-12 w-full h-full max-h-full">
                 <div className="outline outline-green-600 w-full h-full flex flex-col items-center col-span-1 px-2">
                     <h2 className="flex border-b-2">Players</h2>
-                    {mapToArray(gameState.playerActors).map(actor=><UnitContainer name={actor.hero} hp={14} maxHp={15}/>)}
+                    {gameState.getHeroes().map(actor=><UnitContainer actor={actor}/>)}
                 </div>
                 <div className="col-span-10 flex w-full items-start justify-center">
                     <div className="scale-100">
@@ -45,7 +46,7 @@ export default function Play({ }: Props) {
                 </div>
                 <div className="outline outline-red-600 w-full h-full flex flex-col items-center col-span-1 px-2">
                     <h2 className="flex border-b-2">Enemies</h2>
-                    {mapToArray(gameState.enemyActors).map(actor=><UnitContainer name={actor.name} hp={22} maxHp={24}/>)}
+                    {gameState.getEnemies().map(actor=><UnitContainer actor={actor}/>)}
                 </div>
             </section>
             <section className="w-full">
@@ -55,11 +56,16 @@ export default function Play({ }: Props) {
     )
 }
 
-function UnitContainer({name, hp, maxHp}:{name:string, hp: number, maxHp: number}){
+function UnitContainer({actor}: {actor: Actor}){
+    const {name, health, maxHealth, moves, maxMoves} = actor
+    const {hero} = actor as Hero
     return (
         <div className="outline outline-grey-300 w-full min-h-[125px]">
-            <p>{name}</p>
-            <p>{hp}/{maxHp}HP</p>
+            {
+                hero ? <p>{hero} ({name})</p> : <p>{name}</p>
+            }
+            <p>{health}/{maxHealth}HP</p>
+            <p>Moves Left: {maxMoves-moves}</p>
         </div>
     )
 }
