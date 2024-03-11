@@ -1,12 +1,12 @@
 import { atom } from "jotai";
 import { Actor, Enemy, Hero } from "../game-state-model/models/Actor";
-import { GameState, TileActorMap, newGameState } from "../game-state-model/models/GameState";
+import { GameState, newGameState } from "../game-state-model/models/GameState";
 import { HexGridShapes } from "../game-state-model/models/HexGrid";
 import {MovementController, newMovementController} from '../game-state-model/controllers/MovementController'
 import { newGameSessionController } from "../game-state-model/controllers/GameSessionController";
 import { SingletonLog } from "../game-state-model/models/Log";
-import { atomWithListeners } from "./customAtoms/atomWithListeners";
 import { focusAtom } from "jotai-optics";
+import { useLogStore } from "../game-state-model/stores/logStore";
 
 type View = 'setup' | 'play'
 export type TileSize = 'small' | 'medium'
@@ -26,6 +26,8 @@ export const gameSessionAtom = focusAtom(gameStateAtom, (optic)=>optic.prop('gam
 //export const sessionListenerAtom = atomWithListeners(gSController)
 export const logAtom = atom(log)
 //export const tileActorMapAtom = atom<TileActorMap>((get)=>get(gameStateAtom).gameStateData.tileActorMap)
-export const movementControllerAtom = atom<MovementController>((get)=>newMovementController(get(gameStateAtom),get(logAtom)))
+//const addActionToLog = useLogStore((state)=>state.addActionToLog)
+const {addActionToLog} = useLogStore.getState()
+export const movementControllerAtom = atom<MovementController>((get)=>newMovementController(get(gameStateAtom),addActionToLog))
 export const selectedActorAtom = atom<Actor | null>(null)
 export const actorsAtom = atom((get)=>get(gameStateAtom).gameStateData.actors)

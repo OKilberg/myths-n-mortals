@@ -5,7 +5,9 @@ import { IoMdExit } from "react-icons/io";
 import { IoPlaySkipForwardCircle } from "react-icons/io5";
 
 import { Actor, Hero } from "../../game-state-model/models/Actor";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useGameSessionStore} from '../../game-state-model/stores/gameSessionStore'
+import { useLogStore } from "../../game-state-model/stores/logStore";
 
 type Props = {}
 
@@ -14,8 +16,12 @@ export default function Play({ }: Props) {
     const [gameState] = useAtom(gameStateAtom)
     const [tileSize] = useAtom(tileSizeAtom)
     const [gSC] = useAtom(gameSessionControllerAtom)
-    const [gameSession] = useAtom(gameSessionAtom)
+    //const [gameSession] = useAtom(gameSessionAtom)
+    const round = useGameSessionStore((state)=>state.gameSession.round)
+    const turn = useGameSessionStore((state)=>state.gameSession.turn)
+    const endRound = useGameSessionStore((state)=>state.endRound)
     const [selectedActor, selectActor] = useAtom(selectedActorAtom)
+    const logs = useLogStore((state)=>state.logs)
 
     function renderHexTiles() {
         if (!gameState) return;
@@ -42,9 +48,9 @@ export default function Play({ }: Props) {
                     Exit
                 </button>
                 <div className="flex gap-4 items-center">
-                    <h2 className="text-lg">Round: {gSC.getRound()}</h2>
-                    <h2 className="text-lg"><b>Turn: {gSC.getTurn()}</b></h2>
-                    <button className="bg-orange-500 p-1 rounded-md flex items-center px-2 gap-1" onClick={()=>gSC.endRound()}>End Round <IoPlaySkipForwardCircle size={24}/> </button>
+                    <h2 className="text-lg">Round: {round}</h2>
+                    <h2 className="text-lg"><b>Turn: {turn}</b></h2>
+                    <button className="bg-orange-500 p-1 rounded-md flex items-center px-2 gap-1" onClick={()=>endRound()}>End Round <IoPlaySkipForwardCircle size={24}/> </button>
                 </div>
                 <div>
 
