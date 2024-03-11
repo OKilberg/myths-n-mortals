@@ -14,12 +14,12 @@ export default function Play({ }: Props) {
     const [view, setView] = useAtom(viewAtom)
     const [gameState] = useAtom(gameStateAtom)
     const [tileSize] = useAtom(tileSizeAtom)
-    const [gSC] = useAtom(gameSessionControllerAtom)
+    //const [gSC] = useAtom(gameSessionControllerAtom)
     //const [gameSession] = useAtom(gameSessionAtom)
     const round = useGameSessionStore((state)=>state.gameSession.round)
     const turn = useGameSessionStore((state)=>state.gameSession.turn)
     const endRound = useGameSessionStore((state)=>state.endRound)
-    const [selectedActor, selectActor] = useAtom(selectedActorAtom)
+    //const [selectedActor, selectActor] = useAtom(selectedActorAtom)
     const logs = useLogStore((state)=>state.logs)
     const [cursor] = useAtom(cursorStyleAtom)
 
@@ -49,7 +49,7 @@ export default function Play({ }: Props) {
           background: 'red',
         },
       },
-      duration: 10000,
+      duration: 5000,
     }
 
     const mainStyle = "h-screen w-screen flex flex-col items-center  gap-4 p-4"

@@ -2,7 +2,7 @@ import { atom } from "jotai";
 import { Actor, Enemy, Hero } from "../game-state-model/models/Actor";
 import { GameState, newGameState } from "../game-state-model/models/GameState";
 import { HexGridShapes } from "../game-state-model/models/HexGrid";
-import {MovementController, newMovementController} from '../game-state-model/controllers/MovementController'
+import {ActionController, newActionController} from '../game-state-model/controllers/ActionController'
 import { newGameSessionController } from "../game-state-model/controllers/GameSessionController";
 import { SingletonLog } from "../game-state-model/models/Log";
 import { focusAtom } from "jotai-optics";
@@ -30,6 +30,6 @@ export const logAtom = atom(log)
 //export const tileActorMapAtom = atom<TileActorMap>((get)=>get(gameStateAtom).gameStateData.tileActorMap)
 //const addActionToLog = useLogStore((state)=>state.addActionToLog)
 const {addActionToLog} = useLogStore.getState()
-export const movementControllerAtom = atom<MovementController>((get)=>newMovementController(get(gameStateAtom)))
+export const actionControllerAtom = atom<ActionController>((get)=>newActionController(get(gameStateAtom)))
 export const selectedActorAtom = atom<Actor | null>(null)
 export const actorsAtom = atom((get)=>get(gameStateAtom).gameStateData.actors)

@@ -1,10 +1,9 @@
 import { ReactNode, useEffect, useRef, useState } from 'react'
 import '../tile.scss'
 import { useAtom } from 'jotai'
-import { actorsAtom, cursorStyleAtom, movementControllerAtom, selectedActorAtom } from '../atoms'
+import { actorsAtom, cursorStyleAtom, actionControllerAtom, selectedActorAtom } from '../atoms'
 import { useHover } from 'usehooks-ts'
-import { AttackResult, enemyAttack, playerAttack } from '../../game-state-model/actions/action'
-import { Enemy, Hero } from '../../game-state-model/models/Actor'
+import { AttackResult } from '../../game-state-model/actions/action'
 import toast from 'react-hot-toast'
 
 type Tile = { q: number, r: number }
@@ -15,8 +14,8 @@ type Props = {
 }
 
 export default function HexTile({ tile, size }: Props) {
-    const [mC] = useAtom(movementControllerAtom)
-    const [actor, setActor] = useState(mC.getTileActor(tile))
+    const [aC] = useAtom(actionControllerAtom)
+    const [actor, setActor] = useState(aC.getTileActor(tile))
     const [selectedActor, selectActor] = useAtom(selectedActorAtom)
     const [actors] = useAtom(actorsAtom)
     const hoverRef = useRef(null)
@@ -24,9 +23,9 @@ export default function HexTile({ tile, size }: Props) {
     const hovering = useHover(hoverRef)
 
     useEffect(() => {
-        const fn = () => setActor(mC.getTileActor(tile));
-        mC.subscribe(fn)
-        return () => mC.unsubscribe(fn)
+        const fn = () => setActor(aC.getTileActor(tile));
+        aC.subscribe(fn)
+        return () => aC.unsubscribe(fn)
     }, [])
 
     useEffect(()=>{
@@ -37,9 +36,9 @@ export default function HexTile({ tile, size }: Props) {
 
     function onTileClick() { // Move this logic to controller?
         if (selectedActor && !selectedActor.tile && !actor) { // Spawn
-            const spawn = mC.spawn(selectedActor, tile)
+            const spawn = aC.spawn(selectedActor, tile)
             selectActor(null)
-            setActor(mC.getTileActor(tile))
+            setActor(aC.getTileActor(tile))
         }
         else if (!selectedActor && actor) { // Select
             const tileActor = actors.get(actor)
@@ -47,27 +46,16 @@ export default function HexTile({ tile, size }: Props) {
         }
         else if(selectedActor && actor){
             const tileActor = actors.get(actor)
-            if(selectedActor?.team !== tileActor?.team){ // Enemy
-                if('hero' in selectedActor){
-                    const attackResult = playerAttack((selectedActor as Hero), (tileActor as Enemy), (selectedActor as Hero).weapon)
-                    //console.log(attackResult.message)
-                    attackToast(attackResult)
-                    
-                    
-                }
-                else {
-                    const attackResult = enemyAttack((selectedActor as Enemy),(tileActor as Hero))
-                    //console.log(attackResult.message)
-                    attackToast(attackResult)
-                }
-                
+            if(tileActor && selectedActor?.team !== tileActor?.team){ // Attack Non-Team Target
+                const attack = aC.attack(selectedActor,tileActor)
+                if(attack) attackToast((attack as AttackResult))
             }
             selectActor(null)
         }
         else if (selectedActor) { // Move
-            const move = mC.move(selectedActor, tile)
+            const move = aC.move(selectedActor, tile)
             selectActor(null)
-            setActor(mC.getTileActor(tile))
+            setActor(aC.getTileActor(tile))
         }
         setCursor('default')
     }
