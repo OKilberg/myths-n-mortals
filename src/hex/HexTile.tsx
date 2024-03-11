@@ -2,7 +2,6 @@ import { ReactNode, useEffect, useState } from 'react'
 import '../tile.scss'
 import { useAtom } from 'jotai'
 import { actorsAtom, movementControllerAtom, selectedActorAtom } from '../atoms'
-import { useGameSessionStore } from '../../game-state-model/stores/gameSessionStore'
 
 type Tile = { q: number, r: number }
 
@@ -16,7 +15,6 @@ export default function HexTile({ tile, size }: Props) {
     const [actor, setActor] = useState(mC.getTileActor(tile))
     const [selectedActor, selectActor] = useAtom(selectedActorAtom)
     const [actors] = useAtom(actorsAtom)
-    const {round, turn} = useGameSessionStore((state)=>state.gameSession)
 
     useEffect(() => {
         const fn = () => setActor(mC.getTileActor(tile));
@@ -26,7 +24,7 @@ export default function HexTile({ tile, size }: Props) {
 
     function onTileClick() { // Move this logic to controller?
         if (selectedActor && !selectedActor.tile && !actor) {
-            const spawn = mC.spawn(selectedActor, tile, round, turn)
+            const spawn = mC.spawn(selectedActor, tile)
             selectActor(null)
             setActor(mC.getTileActor(tile))
         }
@@ -35,7 +33,7 @@ export default function HexTile({ tile, size }: Props) {
             if (tileActor) selectActor(tileActor)
         }
         else if (selectedActor) {
-            const move = mC.move(selectedActor, tile, round, turn)
+            const move = mC.move(selectedActor, tile)
             selectActor(null)
             setActor(mC.getTileActor(tile))
         }
