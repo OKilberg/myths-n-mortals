@@ -10,10 +10,12 @@ import { useLogStore } from "../game-state-model/stores/logStore";
 
 type View = 'setup' | 'play'
 export type TileSize = 'small' | 'medium'
+export type Cursor = 'standard' | 'default' | 'attack' | 'move' | 'spawn'
 let gameState = newGameState()
 const gSController = newGameSessionController(gameState.gameStateData.gameSession)
 const log = SingletonLog(gSController.getGameSession)
 
+export const cursorStyleAtom = atom<Cursor>('standard')
 export const viewAtom = atom<View>('setup')
 export const mapAtom = atom<HexGridShapes>('rectangle')
 export const tileSizeAtom = atom<TileSize>('medium')

@@ -5,7 +5,13 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      cursor: {
+        'attack':'url("./gladius.svg"), auto',
+        'move':'url("./wingfoot.svg"), auto',
+        'spawn':'url("./cement-shoes.svg"), auto'
+      }
+    },
   },
   plugins: [],
 }

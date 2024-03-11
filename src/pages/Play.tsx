@@ -1,13 +1,12 @@
 import HexTile, { HexRow } from "../hex/HexTile"
 import { useAtom } from "jotai"
-import { gameSessionAtom, gameSessionControllerAtom, gameStateAtom, selectedActorAtom, tileSizeAtom, viewAtom } from "../atoms"
+import { cursorStyleAtom, gameSessionControllerAtom, gameStateAtom, selectedActorAtom, tileSizeAtom, viewAtom } from "../atoms"
 import { IoMdExit } from "react-icons/io";
 import { IoPlaySkipForwardCircle } from "react-icons/io5";
-
 import { Actor, Hero } from "../../game-state-model/models/Actor";
-import { useEffect, useState } from "react";
 import { useGameSessionStore} from '../../game-state-model/stores/gameSessionStore'
 import { useLogStore } from "../../game-state-model/stores/logStore";
+import { Toaster } from 'react-hot-toast';
 
 type Props = {}
 
@@ -22,6 +21,7 @@ export default function Play({ }: Props) {
     const endRound = useGameSessionStore((state)=>state.endRound)
     const [selectedActor, selectActor] = useAtom(selectedActorAtom)
     const logs = useLogStore((state)=>state.logs)
+    const [cursor] = useAtom(cursorStyleAtom)
 
     function renderHexTiles() {
         if (!gameState) return;
@@ -39,10 +39,26 @@ export default function Play({ }: Props) {
         }
         return rows
     }
+    const toastOptions = {success: {
+        style: {
+          background: 'green',
+        },
+      },
+      error: {
+        style: {
+          background: 'red',
+        },
+      },
+      duration: 10000,
+    }
+
+    const mainStyle = "h-screen w-screen flex flex-col items-center  gap-4 p-4"
+    const cursorStyle = getCursorStyle(cursor)
 
     return (
-        <main className="h-screen w-screen flex flex-col items-center  gap-4 p-4">
+        <main className={`${mainStyle} ${cursorStyle}`}>
             <header className="bg-zinc-700 flex items-center justify-between w-full min-h-[40px] px-2">
+                <Toaster position="bottom-right" toastOptions={toastOptions}/>
                 <button onClick={() => setView('setup')} className="flex items-center gap-1 text-lg hover:opacity-75 cursor-pointer">
                     <IoMdExit size={24} className="rotate-180 text-red-400" />
                     Exit
@@ -98,6 +114,15 @@ function UnitContainer({ actor }: { actor: Actor }) {
             <p>Moves Left: {maxMoves - moves}</p>
         </div>
     )
+}
+
+function getCursorStyle(cursor: string){
+    switch(cursor){
+        case 'default': return ''
+        case 'attack': return 'cursor-attack'
+        case 'move': return 'cursor-move'
+        case 'spawn': return 'cursor-spawn'
+    }
 }
 
 function mapToArray(map: Map<any, any>) {

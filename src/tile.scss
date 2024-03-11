@@ -37,11 +37,12 @@ $row-margin: ($triangle-border-x / 2)*-1;
     }
 
     &:hover {
-        cursor: pointer;
+        //cursor: pointer;
         filter: brightness(90%);
 
     }
 
+    /*
     &.attack-hover {
         &:hover {
             cursor: url("./bowie-knife.svg"), auto;
@@ -52,7 +53,7 @@ $row-margin: ($triangle-border-x / 2)*-1;
         &:hover {
             cursor: url("./run.svg"), auto;
         }
-    }
+    }*/
 
     box-sizing: border-box;
     position: relative;
