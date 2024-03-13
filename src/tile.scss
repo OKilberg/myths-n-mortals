@@ -3,13 +3,13 @@ $triangle-border-x: 52px;
 $triangle-border-y: 30px; 
 $square-width: $triangle-border-x * 2;
 $square-height: $triangle-border-y * 2;
-$row-margin: ($triangle-border-x / 2)*-1;
+$row-margin: calc($triangle-border-x / 2)*-1;
 
 @mixin hex-tile($triangle-border-x, $triangle-border-y, $square-width, $square-height) {
     display: flex;
     flex-direction: column;
     //margin-left: 3px;
-    margin-left: $triangle-border-x/17.3;
+    margin-left: calc($triangle-border-x/17.3);
 
     user-select: none;
 
@@ -82,7 +82,7 @@ $row-margin: ($triangle-border-x / 2)*-1;
 
     .image img {
         position: absolute;
-        z-index: 999;
+        z-index: 10;
         width: 60%;
         height: 50%;
         object-fit: cover;
@@ -97,7 +97,7 @@ $row-margin: ($triangle-border-x / 2)*-1;
 
     .hex-content {
         position: absolute;
-        z-index: 999;
+        z-index: 100;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
@@ -110,7 +110,7 @@ $row-margin: ($triangle-border-x / 2)*-1;
 }
 
 .hex-tile-small {
-    @include hex-tile($triangle-border-x / 2, $triangle-border-y / 2, $square-width / 2, $square-height / 2);
+    @include hex-tile(calc($triangle-border-x / 2), calc($triangle-border-y / 2), calc($square-width / 2), calc($square-height / 2));
 }
 
 .hex-tile-medium {
@@ -129,7 +129,7 @@ $row-margin: ($triangle-border-x / 2)*-1;
 }
 
 .hex-row-small {
-    @include hex-row($row-margin/2)
+    @include hex-row(calc($row-margin/2))
 }
 
 .hex-row-medium {

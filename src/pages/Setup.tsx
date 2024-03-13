@@ -79,14 +79,13 @@ export default function Setup({ configureGameState }: Props) {
                 <div>
                     <h4>Heroes</h4>
                     <div className="h-[400px] w-[400px] flex flex-col border-2 p-2 gap-2">
-                        {heroes.map((hero, index) => <MenuItem label={`${hero.hero} (Player ${index+1})`} onClick={() => removeHeroById(hero.id)} className="border-green-600" />)}
+                        {heroes.map((hero, index) => <MenuItem key={hero.name+index} label={`${hero.hero} (Player ${index+1})`} onClick={() => removeHeroById(hero.id)} className="border-green-600" />)}
                     </div>
                 </div>
                 <div>
                     <h4>Enemies</h4>
                     <div className="h-[400px] w-[400px] flex flex-col border-2 p-2 gap-2">
-                        {enemies.map((enemy, index) => <MenuItem label={`${enemy.name} (Enemy ${index+1})`} onClick={() => removeEnemyById(enemy.id)} className="border-red-600" />)}
-
+                        {enemies.map((enemy, index) => <MenuItem key={enemy.name+index} label={`${enemy.name} (Enemy ${index+1})`} onClick={() => removeEnemyById(enemy.id)} className="border-red-600" />)}
                     </div>
                 </div>
                 <div>
