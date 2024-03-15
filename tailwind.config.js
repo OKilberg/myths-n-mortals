@@ -9,7 +9,8 @@ export default {
       cursor: {
         'attack':'url("./gladius.svg"), auto',
         'move':'url("./wingfoot.svg"), auto',
-        'spawn':'url("./cement-shoes.svg"), auto'
+        'spawn':'url("./cement-shoes.svg"), auto',
+        'crosshair':'url("./crosshair.svg"), auto'
       }
     },
   },

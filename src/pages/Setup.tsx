@@ -1,9 +1,10 @@
 import { useAtom } from "jotai"
-import { TileSize, enemiesAtom, heroesAtom, mapAtom, modeAtom, tileSizeAtom, viewAtom } from "../atoms"
-import { Actor, Hero, HeroClass, newEnemy, newHero } from "../../game-state-model/models/Actor"
+import { TileSize, enemiesAtom, heroesAtom, mapAtom, modeAtom, tileSizeAtom } from "../atoms"
+import { Actor, HeroClass, newEnemy, newHero } from "../../game-state-model/models/Actor"
 import { IoPlay } from "react-icons/io5";
 import { ReactNode } from "react";
 import { GameStateData, newGameStateData } from "../../game-state-model/models/GameState";
+import { getHeroBaseAbilities } from "../../game-state-model/models/Ability";
 
 type Props = {
     configureGameState: (gameStateData: GameStateData)=>void;

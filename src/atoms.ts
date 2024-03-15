@@ -5,11 +5,11 @@ import { HexGridShapes } from "../game-state-model/models/HexGrid";
 import {ActionController, newActionController} from '../game-state-model/controllers/ActionController'
 import { newGameSessionController } from "../game-state-model/controllers/GameSessionController";
 import { focusAtom } from "jotai-optics";
-import { useLogStore } from "../game-state-model/stores/logStore";
+import { Action } from "../game-state-model/actions/action";
 
 type View = 'setup' | 'play'
 export type TileSize = 'small' | 'medium'
-export type Cursor = 'standard' | 'default' | 'attack' | 'move' | 'spawn'
+export type Cursor = 'standard' | 'default' | 'attack' | 'move' | 'spawn' | 'unitTarget'
 let gameState = newGameState()
 const gSController = newGameSessionController(gameState.gameStateData.gameSession)
 
@@ -27,7 +27,8 @@ export const gameSessionAtom = focusAtom(gameStateAtom, (optic)=>optic.prop('gam
 //export const logAtom = atom(log)
 //export const tileActorMapAtom = atom<TileActorMap>((get)=>get(gameStateAtom).gameStateData.tileActorMap)
 //const addActionToLog = useLogStore((state)=>state.addActionToLog)
-const {addActionToLog} = useLogStore.getState()
+//const {addActionToLog} = useLogStore.getState()
 export const actionControllerAtom = atom<ActionController>((get)=>newActionController(get(gameStateAtom)))
 export const selectedActorAtom = atom<Actor | null>(null)
+export const selectedActionAtom = atom<Action | null>(null)
 export const actorsAtom = atom((get)=>get(gameStateAtom).gameStateData.actors)

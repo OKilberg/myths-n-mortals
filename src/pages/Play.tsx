@@ -6,7 +6,7 @@ import { IoPlaySkipForwardCircle } from "react-icons/io5";
 import { Actor, Hero } from "../../game-state-model/models/Actor";
 import { useGameSessionStore } from '../../game-state-model/stores/gameSessionStore'
 import { Toaster } from 'react-hot-toast';
-import Action from "../components/Action";
+import ActionBar from "../components/ActionBar";
 
 type Props = {}
 
@@ -17,6 +17,7 @@ export default function Play({ }: Props) {
     const round = useGameSessionStore((state) => state.gameSession.round)
     const turn = useGameSessionStore((state) => state.gameSession.turn)
     const endRound = useGameSessionStore((state) => state.endRound)
+    const [selectedActor] = useAtom(selectedActorAtom)
 
     function renderHexTiles() {
         if (!gameState) return;
@@ -85,9 +86,7 @@ export default function Play({ }: Props) {
             </section>
             <section className="w-full">
                 <div className="bg-zinc-700 flex flex-row gap-1 items-center justify-center w-full min-h-[80px] h-[80px]">
-                    <Action/>
-                    <Action/>
-                    <Action/>
+                    {selectedActor && <ActionBar/>}
                 </div>
             </section>
         </main>
